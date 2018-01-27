@@ -1,6 +1,7 @@
 package com.Sciguy429.ScoutingServer;
 
 import javax.bluetooth.*;
+import java.sql.*;
 
 public class Main {
 
@@ -42,6 +43,16 @@ public class Main {
 
     public static void main(String[] args) {
         // write your code here
+        try {
+            Class.forName("org.h2.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:h2:~/scouting", "JAVAADMIN", "%Lc3W+z~Y`sQ*?Zk");
+            // add application code here
+            conn.prepareCall("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(255));").executeUpdate();
+            conn.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             LocalDevice localDevice = LocalDevice.getLocalDevice();
             DiscoveryAgent agent = localDevice.getDiscoveryAgent();
