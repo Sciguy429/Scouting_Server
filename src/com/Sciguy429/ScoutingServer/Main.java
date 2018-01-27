@@ -47,7 +47,7 @@ public class Main {
             Class.forName("org.h2.Driver");
             Connection conn = DriverManager.getConnection("jdbc:h2:~/scouting", "JAVAADMIN", "%Lc3W+z~Y`sQ*?Zk");
             // add application code here
-            conn.prepareCall("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(255));").executeUpdate();
+            //conn.prepareCall("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(255));").executeUpdate();
             conn.close();
         }
         catch (Exception e) {
