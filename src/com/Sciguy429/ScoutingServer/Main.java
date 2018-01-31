@@ -54,9 +54,9 @@ public class Main {
 
             // loop through the result set
             while (rs.next()) {
-                System.out.println(rs.getInt("user_id") + "\t" +
-                        rs.getString("user_name"));
+                System.out.println(rs.getInt("user_id") + "\t" + rs.getString("user_name"));
             }
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
