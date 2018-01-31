@@ -26,7 +26,7 @@ public class Main {
 
         @Override
         public void inquiryCompleted(int arg0) {
-            synchronized(lock){
+            synchronized (lock) {
                 lock.notify();
             }
         }
@@ -47,18 +47,24 @@ public class Main {
             Class.forName("org.h2.Driver");
             Connection conn = DriverManager.getConnection("jdbc:h2:~/scouting", "JAVAADMIN", "%Lc3W+z~Y`sQ*?Zk");
             // add application code here
-            //conn.prepareCall("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(255));").executeUpdate();
-            conn.close();
-        }
-        catch (Exception e) {
+            String sql = "SELECT user_id, user_name FROM users";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // loop through the result set
+            while (rs.next()) {
+                System.out.println(rs.getInt("user_id") + "\t" +
+                        rs.getString("user_name"));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             LocalDevice localDevice = LocalDevice.getLocalDevice();
             DiscoveryAgent agent = localDevice.getDiscoveryAgent();
             agent.startInquiry(DiscoveryAgent.GIAC, new MyDiscoveryListener());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
