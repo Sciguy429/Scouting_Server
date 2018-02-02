@@ -19,7 +19,7 @@ public class BTCommand {
     public static final class Sync extends BTCommand {
         //Requests A Database Re-Sync From The Server
         //If Full Is Set To True The Re-Sync Sends All Data Regardless Of The Condition Of the Remote Devices Internal Database
-        //Otherwise A Md5 Of The Clients Config DB Copy Is Sent, Just To Make Sure A Data Sync Is Possible
+        //Otherwise A Md5 Of The Clients Config DB Copy Is Sent, Just To Make Sure A Data Sync Is Possible And Wont Have The Potential To Cause Problems
         //NOTE: A Full DB Sync Will Overwrite The Clients Config Table UNCONDITIONALLY And Thus Will Only Be Used On First App Start Or After A Hard DB Reset On The Client
         Boolean full = false;
         String clientConfigDBMd5;
