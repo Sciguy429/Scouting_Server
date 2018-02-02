@@ -6,11 +6,15 @@ import javax.bluetooth.UUID;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BTConnectionThread implements Runnable {
 
+    private CopyOnWriteArrayList<BTCommand> BTCommandQueue = new CopyOnWriteArrayList<>();
+
     public BTConnectionThread() {
-        //TODO Create constrtor to include handelers for HT database thread
+        //TODO Create A StartUp Procedure For the HT Database Thread
+
     }
 
     @Override
