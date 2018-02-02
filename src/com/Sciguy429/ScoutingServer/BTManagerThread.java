@@ -52,8 +52,7 @@ public class BTManagerThread implements Runnable {
                 System.out.println("waiting for connection...");
                 connection = notifier.acceptAndOpen();
                 System.out.println("After AcceptAndOpen...");
-                //Thread processThread = new Thread(new ProcessConnectionThread(connection));
-                //processThread.start();
+                new Thread(new BTConnectionThread(H2Connection, connection)).start();
 
             } catch (Exception e) {
                 e.printStackTrace();
