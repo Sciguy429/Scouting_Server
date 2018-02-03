@@ -1,6 +1,5 @@
 package com.Sciguy429.ScoutingServer;
 
-import javax.bluetooth.*;
 import java.sql.*;
 
 public class Main {
