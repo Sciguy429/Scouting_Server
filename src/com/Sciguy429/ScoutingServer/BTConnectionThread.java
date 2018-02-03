@@ -3,6 +3,7 @@ package com.Sciguy429.ScoutingServer;
 import javax.microedition.io.StreamConnection;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.*;
 
 public class BTConnectionThread implements Runnable {
@@ -17,9 +18,11 @@ public class BTConnectionThread implements Runnable {
 
     @Override
     public void run() {
-        InputStream BTIS = null;
+        InputStream BTIS;
+        OutputStream BTOS;
         try {
             BTIS = BTConnection.openInputStream();
+            BTOS = BTConnection.openOutputStream();
             while (true) {
                 if (BTIS.available() > 0)
                 System.out.println(BTIS.read());
