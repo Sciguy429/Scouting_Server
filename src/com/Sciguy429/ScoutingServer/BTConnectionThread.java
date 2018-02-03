@@ -11,6 +11,8 @@ public class BTConnectionThread implements Runnable {
     int connectionNumber;
     Connection H2Connection;
     StreamConnection BTConnection;
+    InputStream BTIS;
+    OutputStream BTOS;
 
     BTConnectionThread(int connectionNumber, Connection H2Connection, StreamConnection BTConnection) {
         this.connectionNumber = connectionNumber;
@@ -21,8 +23,6 @@ public class BTConnectionThread implements Runnable {
     @Override
     public void run() {
         System.out.println("Connection " + connectionNumber + ": Thread Start");
-        InputStream BTIS;
-        OutputStream BTOS;
         try {
             BTIS = BTConnection.openInputStream();
             BTOS = BTConnection.openOutputStream();
