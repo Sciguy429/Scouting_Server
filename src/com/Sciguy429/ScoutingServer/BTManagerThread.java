@@ -11,6 +11,7 @@ import java.sql.*;
 public class BTManagerThread implements Runnable {
 
     private Connection H2Connection;
+    private int connectionNumber = 0;
 
     BTManagerThread(Connection H2Connection) {
         this.H2Connection = H2Connection;
@@ -57,7 +58,8 @@ public class BTManagerThread implements Runnable {
                 System.out.println("waiting for connection...");
                 connection = notifier.acceptAndOpen();
                 System.out.println("After AcceptAndOpen...");
-                new Thread(new BTConnectionThread(H2Connection, connection)).start();
+                new Thread(new BTConnectionThread(connectionNumber, H2Connection, connection)).start();
+                connectionNumber++;
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -8,10 +8,12 @@ import java.sql.*;
 
 public class BTConnectionThread implements Runnable {
 
+    int connectionNumber;
     Connection H2Connection;
     StreamConnection BTConnection;
 
-    BTConnectionThread(Connection H2Connection, StreamConnection BTConnection) {
+    BTConnectionThread(int connectionNumber, Connection H2Connection, StreamConnection BTConnection) {
+        this.connectionNumber = connectionNumber;
         this.H2Connection = H2Connection;
         this.BTConnection = BTConnection;
     }
