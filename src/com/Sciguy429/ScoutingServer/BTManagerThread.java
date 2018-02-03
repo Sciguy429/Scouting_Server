@@ -12,8 +12,13 @@ public class BTManagerThread implements Runnable {
 
     private Connection H2Connection;
 
-    public BTManagerThread(Connection H2Connection) {
+    BTManagerThread(Connection H2Connection) {
         this.H2Connection = H2Connection;
+        try {
+            H2Connection.close(); //TODO REMOVE THIS!
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -36,7 +41,7 @@ public class BTManagerThread implements Runnable {
             local = LocalDevice.getLocalDevice();
             local.setDiscoverable(DiscoveryAgent.GIAC);
 
-            UUID uuid = new UUID("d0c722b07e1511e1b0c40800200c9a66", false);
+            UUID uuid = new UUID("05f7185017bd4805a32dd5e22be90d6d", false);
             System.out.println(uuid.toString());
 
             String url = "btspp://localhost:" + uuid.toString() + ";name=RemoteBluetooth";
