@@ -20,14 +20,16 @@ public class BTConnectionThread implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("Connection " + connectionNumber + ": Thread Start");
         InputStream BTIS;
         OutputStream BTOS;
         try {
             BTIS = BTConnection.openInputStream();
             BTOS = BTConnection.openOutputStream();
             while (true) {
-                if (BTIS.available() > 0)
-                System.out.println(BTIS.read());
+                if (BTIS.available() > 0) {
+                    System.out.println(BTIS.read());
+                }
                 Thread.sleep(10);
             }
         } catch (IOException | InterruptedException e) {
