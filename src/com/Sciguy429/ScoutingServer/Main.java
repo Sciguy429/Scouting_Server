@@ -1,6 +1,9 @@
 package com.Sciguy429.ScoutingServer;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
+
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -24,6 +27,13 @@ public class Main {
 
     private static boolean isDatabaseValid(Connection conn) {
         System.out.println("Starting Database Sanity Check...");
+
+        ArrayList<Column> ConfigAllowedColumns = new ArrayList<>();
+        ConfigAllowedColumns.add(new Column("CONFIG_DATA_NUMBER", Types.INTEGER));
+        ConfigAllowedColumns.add(new Column("CONFIG_DATA_ID", Types.VARCHAR));
+        ConfigAllowedColumns.add(new Column("CONFIG_DATA_TYPE", Types.VARCHAR));
+        ConfigAllowedColumns.add(new Column("CONFIG_DATA_SHOWAVG", Types.BOOLEAN));
+
         Statement stmt = null;
         try {
             conn.getMetaData();
@@ -33,96 +43,33 @@ public class Main {
                 System.out.println("ERROR: CONFIG Table Not Found In Database");
                 return false;
             } else {
+                ArrayList<Column> col =  new ArrayList<>();
                 ResultSet rset = conn.getMetaData().getColumns(null, null, "CONFIG", null);
-                boolean CDN = false;
-                boolean CDI = false;
-                boolean CDT = false;
-                boolean CDS = false;
                 while (rset.next()) {
-                    switch (rset.getString(4)) {
-                        case "CONFIG_DATA_NUMBER":
-                            if (!CDN) {
-                                CDN = true;
-                                if (rset.getShort(5) != Types.INTEGER) {
-                                    System.out.println('✗');
-                                    System.out.println("ERROR: " + rset.getString(4) + " Has Wrong Data Type");
-                                    return false;
-                                }
-                            } else {
+                    col.add(new Column(rset.getString(4), (int) rset.getShort(5)));
+                }
+                for (Column c : col) {
+                    boolean found = false;
+                    for (Column b : ConfigAllowedColumns) {
+                        if (c.name.equals(b.name)) {
+                            if (c.type == b.type) {
+                                ConfigAllowedColumns.remove(b);
+                                found = true;
+                                break;
+                            }
+                            else {
                                 System.out.println('✗');
-                                System.out.println("ERROR: Column " + rset.getString(4) + " Is Defined Twice");
+                                System.out.println("Error: Column (" + c.name + ") Has Incorrect Data Type");
                                 return false;
                             }
-                            break;
-                        case "CONFIG_DATA_ID":
-                            if (!CDI) {
-                                CDI = true;
-                                if (rset.getShort(5) != Types.VARCHAR) {
-                                    System.out.println('✗');
-                                    System.out.println("ERROR: " + rset.getString(4) + " Has Wrong Data Type");
-                                    return false;
-                                }
-                            } else {
-                                System.out.println('✗');
-                                System.out.println("ERROR: Column " + rset.getString(4) + " Is Defined Twice");
-                                return false;
-                            }
-                            break;
-                        case "CONFIG_DATA_TYPE":
-                            if (!CDT) {
-                                CDT = true;
-                                if (rset.getShort(5) != Types.VARCHAR) {
-                                    System.out.println('✗');
-                                    System.out.println("ERROR: " + rset.getString(4) + " Has Wrong Data Type");
-                                    return false;
-                                }
-                            } else {
-                                System.out.println('✗');
-                                System.out.println("ERROR: Column " + rset.getString(4) + " Is Defined Twice");
-                                return false;
-                            }
-                            break;
-                        case "CONFIG_DATA_SHOWAVG":
-                            if (!CDS) {
-                                CDS = true;
-                                if (rset.getShort(5) != Types.BOOLEAN) {
-                                    System.out.println('✗');
-                                    System.out.println("ERROR: " + rset.getString(4) + " Has Wrong Data Type");
-                                    return false;
-                                }
-                            } else {
-                                System.out.println('✗');
-                                System.out.println("ERROR: Column " + rset.getString(4) + " Is Defined Twice");
-                                return false;
-                            }
-                            break;
-                        default:
-                            System.out.println('✗');
-                            System.out.println("ERROR: Unknown Column (" + rset.getString(4) + ") In CONFIG Table");
-                            return false;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println('✗');
+                        System.out.println("Error: Unknown Column (" + c.name + ")");
+                        return false;
                     }
                 }
-                if (!CDN) {
-                    System.out.println('✗');
-                    System.out.println("ERROR: Column CONFIG_DATA_NUMBER Not Present");
-                    return false;
-                }
-                if (!CDI) {
-                    System.out.println('✗');
-                    System.out.println("ERROR: Column CONFIG_DATA_ID Not Present");
-                    return false;
-                }
-                if (!CDT) {
-                    System.out.println('✗');
-                    System.out.println("ERROR: Column CONFIG_DATA_TYPE Not Present");
-                    return false;
-                }
-                if (!CDS) {
-                    System.out.println('✗');
-                    System.out.println("ERROR: Column CONFIG_DATA_SHOWAVG Not Present");
-                    return false;
-                }
-
                 System.out.println('✔');
             }
 
@@ -158,6 +105,15 @@ public class Main {
         }
         System.out.println("Database Is Valid");
         return true;
+    }
+
+    private static class Column {
+        private String name;
+        private int type;
+        private Column (String name, int type) {
+            this.name = name;
+            this.type = type;
+        }
     }
 
     private static boolean doesTableExsist(Connection conn, String name) {
