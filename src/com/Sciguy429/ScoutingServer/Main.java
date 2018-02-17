@@ -147,7 +147,7 @@ public class Main {
 
     private static boolean doesTableExsist(Connection conn, String name) {
         try {
-            ResultSet rset = conn.getMetaData().getTables(null, null, name, null);
+            ResultSet rset = conn.getMetaData().getTables(null, "PUBLIC", name, null);
             if (rset.next()) {
                 return true;
             }
