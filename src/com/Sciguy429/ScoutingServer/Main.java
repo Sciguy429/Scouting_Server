@@ -38,44 +38,44 @@ public class Main {
         try {
             conn.getMetaData();
             System.out.print("\tChecking CONFIG Table: ");
-            if (!doesTableExsist(conn, "CONFIG")) {
-                System.out.println('✗');
-                System.out.println("ERROR: CONFIG Table Not Found In Database");
-                return false;
-            } else {
+            if (doesTableExsist(conn, "CONFIG")) {
                 if (checkTableRows(conn, "CONFIG", ConfigAllowedColumns)) {
                     System.out.println('✔');
                 }
                 else {
                     return false;
                 }
+            } else {
+                System.out.println('✗');
+                System.out.println("ERROR: CONFIG Table Not Found In Database");
+                return false;
             }
 
             System.out.print("\tChecking MATCHES Table: ");
-            if (!doesTableExsist(conn, "MATCHES")) {
+            if (doesTableExsist(conn, "MATCHES")) {
+                System.out.println('✔');
+            } else {
                 System.out.println('✗');
                 System.out.println("ERROR: MATCHES Table Not Found In Database");
                 return false;
-            } else {
-                System.out.println('✔');
             }
 
             System.out.print("\tChecking TEAMS Table: ");
-            if (!doesTableExsist(conn, "TEAMS")) {
+            if (doesTableExsist(conn, "TEAMS")) {
+                System.out.println('✔');
+            } else {
                 System.out.println('✗');
                 System.out.println("ERROR: TEAMS Table Not Found In Database");
                 return false;
-            } else {
-                System.out.println('✔');
             }
 
             System.out.print("\tChecking USERS Table: ");
-            if (!doesTableExsist(conn, "USERS")) {
+            if (doesTableExsist(conn, "USERS")) {
+                System.out.println('✔');
+            } else {
                 System.out.println('✗');
                 System.out.println("ERROR: USERS Table Not Found In Database");
                 return false;
-            } else {
-                System.out.println('✔');
             }
         } catch (SQLException e) {
             e.printStackTrace();
