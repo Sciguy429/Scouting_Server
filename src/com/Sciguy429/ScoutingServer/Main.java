@@ -34,6 +34,14 @@ public class Main {
         ConfigAllowedColumns.add(new Column("CONFIG_DATA_TYPE", Types.VARCHAR));
         ConfigAllowedColumns.add(new Column("CONFIG_DATA_SHOWAVG", Types.BOOLEAN));
 
+        ArrayList<Column> UsersAllowedColumns = new ArrayList<>();
+        UsersAllowedColumns.add(new Column("USER_ID", Types.INTEGER));
+        UsersAllowedColumns.add(new Column("USER_NAME", Types.VARCHAR));
+        UsersAllowedColumns.add(new Column("USER_PASS", Types.VARCHAR));
+        UsersAllowedColumns.add(new Column("USER_FIRST_NAME", Types.VARCHAR));
+        UsersAllowedColumns.add(new Column("USER_LAST_NAME", Types.VARCHAR));
+        UsersAllowedColumns.add(new Column("USER_PERMISSION_LEVEL", Types.INTEGER));
+
         Statement stmt = null;
         try {
             conn.getMetaData();
@@ -71,7 +79,12 @@ public class Main {
 
             System.out.print("\tChecking USERS Table: ");
             if (doesTableExsist(conn, "USERS")) {
-                System.out.println('✔');
+                if (checkTableRows(conn, "USERS", UsersAllowedColumns)) {
+                    System.out.println('✔');
+                }
+                else {
+                    return false;
+                }
             } else {
                 System.out.println('✗');
                 System.out.println("ERROR: USERS Table Not Found In Database");
@@ -97,7 +110,7 @@ public class Main {
     private static boolean checkTableRows(Connection conn, String tableName, ArrayList<Column> allowedColumns) {
         try {
             ArrayList<Column> col = new ArrayList<>();
-            ResultSet rset = conn.getMetaData().getColumns(null, null, tableName, null);
+            ResultSet rset = conn.getMetaData().getColumns(null, "PUBLIC", tableName, null);
             while (rset.next()) {
                 col.add(new Column(rset.getString(4), (int) rset.getShort(5)));
             }
