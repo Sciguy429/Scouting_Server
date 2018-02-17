@@ -116,6 +116,42 @@ public class Main {
         }
     }
 
+    private boolean tableRows(Connection conn, String tableName, ArrayList<Column> allowedColumns) {
+        try {
+            ArrayList<Column> col = new ArrayList<>();
+            ResultSet rset = conn.getMetaData().getColumns(null, null, tableName, null);
+            while (rset.next()) {
+                col.add(new Column(rset.getString(4), (int) rset.getShort(5)));
+            }
+            for (Column c : col) {
+                boolean found = false;
+                for (Column b : allowedColumns) {
+                    if (c.name.equals(b.name)) {
+                        if (c.type == b.type) {
+                            allowedColumns.remove(b);
+                            found = true;
+                            break;
+                        } else {
+                            System.out.println('✗');
+                            System.out.println("Error: Column (" + c.name + ") Has Incorrect Data Type");
+                            return false;
+                        }
+                    }
+                }
+                if (!found) {
+                    System.out.println('✗');
+                    System.out.println("Error: Unknown Column (" + c.name + ")");
+                    return false;
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     private static boolean doesTableExsist(Connection conn, String name) {
         try {
             ResultSet rset = conn.getMetaData().getTables(null, null, name, null);
