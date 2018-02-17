@@ -43,34 +43,12 @@ public class Main {
                 System.out.println("ERROR: CONFIG Table Not Found In Database");
                 return false;
             } else {
-                ArrayList<Column> col =  new ArrayList<>();
-                ResultSet rset = conn.getMetaData().getColumns(null, null, "CONFIG", null);
-                while (rset.next()) {
-                    col.add(new Column(rset.getString(4), (int) rset.getShort(5)));
+                if (checkTableRows(conn, "CONFIG", ConfigAllowedColumns)) {
+                    System.out.println('✔');
                 }
-                for (Column c : col) {
-                    boolean found = false;
-                    for (Column b : ConfigAllowedColumns) {
-                        if (c.name.equals(b.name)) {
-                            if (c.type == b.type) {
-                                ConfigAllowedColumns.remove(b);
-                                found = true;
-                                break;
-                            }
-                            else {
-                                System.out.println('✗');
-                                System.out.println("Error: Column (" + c.name + ") Has Incorrect Data Type");
-                                return false;
-                            }
-                        }
-                    }
-                    if (!found) {
-                        System.out.println('✗');
-                        System.out.println("Error: Unknown Column (" + c.name + ")");
-                        return false;
-                    }
+                else {
+                    return false;
                 }
-                System.out.println('✔');
             }
 
             System.out.print("\tChecking MATCHES Table: ");
@@ -116,7 +94,7 @@ public class Main {
         }
     }
 
-    private boolean tableRows(Connection conn, String tableName, ArrayList<Column> allowedColumns) {
+    private static boolean checkTableRows(Connection conn, String tableName, ArrayList<Column> allowedColumns) {
         try {
             ArrayList<Column> col = new ArrayList<>();
             ResultSet rset = conn.getMetaData().getColumns(null, null, tableName, null);
@@ -147,6 +125,8 @@ public class Main {
         }
         catch (SQLException e) {
             e.printStackTrace();
+            System.out.println('✗');
+            System.out.println("Error: Unknown SQL Error");
             return false;
         }
         return true;
