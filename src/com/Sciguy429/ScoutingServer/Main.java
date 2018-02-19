@@ -45,7 +45,7 @@ public class Main {
             conn.getMetaData();
             System.out.print("\tChecking CONFIG Table: ");
             if (doesTableExist(conn, "CONFIG")) {
-                if (checkTableRows(conn, "CONFIG", ConfigAllowedColumns)) {
+                if (checkTableRows(conn, "CONFIG", ConfigAllowedColumns, false)) {
                     System.out.println('✔');
                 }
                 else {
@@ -77,7 +77,7 @@ public class Main {
 
             System.out.print("\tChecking USERS Table: ");
             if (doesTableExist(conn, "USERS")) {
-                if (checkTableRows(conn, "USERS", UsersAllowedColumns)) {
+                if (checkTableRows(conn, "USERS", UsersAllowedColumns, false)) {
                     System.out.println('✔');
                 }
                 else {
@@ -105,7 +105,7 @@ public class Main {
         }
     }
 
-    private static boolean checkTableRows(Connection conn, String tableName, ArrayList<Column> allowedColumns) {
+    private static boolean checkTableRows(Connection conn, String tableName, ArrayList<Column> allowedColumns, boolean allowUnknown) {
         try {
             ArrayList<Column> col = new ArrayList<>();
             ResultSet rset = conn.getMetaData().getColumns(null, "PUBLIC", tableName, null);
@@ -127,7 +127,7 @@ public class Main {
                         }
                     }
                 }
-                if (!found) {
+                if (!found && !allowUnknown) {
                     System.out.println('✗');
                     System.out.println("Error: Unknown Column (" + c.name + ")");
                     return false;
