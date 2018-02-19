@@ -1,5 +1,6 @@
 package com.Sciguy429.ScoutingServer;
 
+import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -32,6 +33,24 @@ public class Main {
         ConfigAllowedColumns.add(new Column("CONFIG_DATA_TYPE", Types.VARCHAR));
         ConfigAllowedColumns.add(new Column("CONFIG_DATA_SHOWAVG", Types.BOOLEAN));
 
+        ArrayList<Column> MatchesAllowedColumns = new ArrayList<>();
+        MatchesAllowedColumns.add(new Column("MATCH_NUMBER", Types.INTEGER));
+
+        ArrayList<Column> TeamsAllowedColumns = new ArrayList<>();
+        TeamsAllowedColumns.add(new Column("TEAM_NUMBER", Types.INTEGER));
+        TeamsAllowedColumns.add(new Column("TEAM_NAME", Types.VARCHAR));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_DRIVE_TRAIN", Types.VARCHAR));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_PICTURE_SERVER_URI", Types.VARCHAR));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_PICTURE_CLIENT_URI", Types.VARCHAR));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_HEIGHT", Types.DOUBLE));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_PLACE_ON_SCALE", Types.BOOLEAN));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_PLACE_ON_SWITCH", Types.BOOLEAN));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_CAN_CLIMB", Types.BOOLEAN));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_PLACE_IN_PORTAL", Types.BOOLEAN));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_PICKUP_IN_ANY_ORIENTATION", Types.BOOLEAN));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_CUBE_PLACE_METHOD", Types.VARCHAR));
+        TeamsAllowedColumns.add(new Column("TEAM_DATA_COMMENTS", Types.VARCHAR));
+
         ArrayList<Column> UsersAllowedColumns = new ArrayList<>();
         UsersAllowedColumns.add(new Column("USER_ID", Types.INTEGER));
         UsersAllowedColumns.add(new Column("USER_NAME", Types.VARCHAR));
@@ -59,7 +78,12 @@ public class Main {
 
             System.out.print("\tChecking MATCHES Table: ");
             if (doesTableExist(conn, "MATCHES")) {
-                System.out.println('✔');
+                if (checkTableRows(conn, "MATCHES", MatchesAllowedColumns, true)) {
+                    System.out.println('✔');
+                }
+                else {
+                    return false;
+                }
             } else {
                 System.out.println('✗');
                 System.out.println("ERROR: MATCHES Table Not Found In Database");
@@ -68,7 +92,12 @@ public class Main {
 
             System.out.print("\tChecking TEAMS Table: ");
             if (doesTableExist(conn, "TEAMS")) {
-                System.out.println('✔');
+                if (checkTableRows(conn, "TEAMS", TeamsAllowedColumns, false)) {
+                    System.out.println('✔');
+                }
+                else {
+                    return false;
+                }
             } else {
                 System.out.println('✗');
                 System.out.println("ERROR: TEAMS Table Not Found In Database");
