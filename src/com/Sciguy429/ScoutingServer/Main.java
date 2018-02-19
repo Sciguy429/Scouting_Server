@@ -1,7 +1,5 @@
 package com.Sciguy429.ScoutingServer;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -46,7 +44,7 @@ public class Main {
         try {
             conn.getMetaData();
             System.out.print("\tChecking CONFIG Table: ");
-            if (doesTableExsist(conn, "CONFIG")) {
+            if (doesTableExist(conn, "CONFIG")) {
                 if (checkTableRows(conn, "CONFIG", ConfigAllowedColumns)) {
                     System.out.println('✔');
                 }
@@ -60,7 +58,7 @@ public class Main {
             }
 
             System.out.print("\tChecking MATCHES Table: ");
-            if (doesTableExsist(conn, "MATCHES")) {
+            if (doesTableExist(conn, "MATCHES")) {
                 System.out.println('✔');
             } else {
                 System.out.println('✗');
@@ -69,7 +67,7 @@ public class Main {
             }
 
             System.out.print("\tChecking TEAMS Table: ");
-            if (doesTableExsist(conn, "TEAMS")) {
+            if (doesTableExist(conn, "TEAMS")) {
                 System.out.println('✔');
             } else {
                 System.out.println('✗');
@@ -78,7 +76,7 @@ public class Main {
             }
 
             System.out.print("\tChecking USERS Table: ");
-            if (doesTableExsist(conn, "USERS")) {
+            if (doesTableExist(conn, "USERS")) {
                 if (checkTableRows(conn, "USERS", UsersAllowedColumns)) {
                     System.out.println('✔');
                 }
@@ -145,7 +143,7 @@ public class Main {
         return true;
     }
 
-    private static boolean doesTableExsist(Connection conn, String name) {
+    private static boolean doesTableExist(Connection conn, String name) {
         try {
             ResultSet rset = conn.getMetaData().getTables(null, "PUBLIC", name, null);
             if (rset.next()) {
