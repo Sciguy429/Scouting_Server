@@ -59,7 +59,6 @@ public class Main {
         UsersAllowedColumns.add(new Column("USER_LAST_NAME", Types.VARCHAR));
         UsersAllowedColumns.add(new Column("USER_PERMISSION_LEVEL", Types.INTEGER));
 
-        Statement stmt = null;
         try {
             conn.getMetaData();
             System.out.print("\tChecking CONFIG Table: ");
